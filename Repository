@@ -1,0 +1,55 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package student.cc3_task3;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.DriverManager;
+
+
+public class Repository {
+    
+    public class DBConnection {
+    // Standard approach: Return a new connection every time connect() is called
+    public static Connection connect() {
+        Connection conn = null;
+        try {
+            String url = "jdbc:sqlite:D:\\NitbensProject\\Test1.db"; 
+            conn = DriverManager.getConnection(url);
+        } catch (SQLException e) {
+            System.out.println("Connection Failed: " + e.getMessage());
+        }
+        return conn; // Return the specific connection object
+    }
+}
+
+    public void save(Student student) {
+
+        String sql = "INSERT INTO tbl_student(studentID, studentName, age, sex, course, yearLevel, nstpComp, email, contact, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DBConnection.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, student.getStudentID());
+            pstmt.setString(2, student.getStudentName());
+            pstmt.setInt(3, student.getAge());
+            pstmt.setString(4, student.getSex());
+            pstmt.setString(5, student.getCourse());
+            pstmt.setInt(6, student.getYearLevel());
+            pstmt.setString(7, student.getNstpComp());
+            pstmt.setString(8, student.getEmail());
+            pstmt.setString(9, student.getContact());
+            pstmt.setString(10, student.getAddress());
+
+            pstmt.executeUpdate();
+            System.out.println("Student saved successfully!");
+
+        } catch (SQLException e) {
+            System.err.println("Failed to save student: " + e.getMessage());
+        }
+    }
+}
+
