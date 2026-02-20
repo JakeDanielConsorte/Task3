@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package student.cc3_task3;
 
 import java.sql.Connection;
@@ -11,26 +7,16 @@ import java.sql.DriverManager;
 
 
 public class Repository {
+    private final String dbURL;
     
-    public class DBConnection {
-    // Standard approach: Return a new connection every time connect() is called
-    public static Connection connect() {
-        Connection conn = null;
-        try {
-            String url = "jdbc:sqlite:D:\\NitbensProject\\Test1.db"; 
-            conn = DriverManager.getConnection(url);
-        } catch (SQLException e) {
-            System.out.println("Connection Failed: " + e.getMessage());
-        }
-        return conn; // Return the specific connection object
+    private Repository(String dbURL){
+        this.dbURL = dbURL;
     }
-}
-
     public void save(Student student) {
 
         String sql = "INSERT INTO tbl_student(studentID, studentName, age, sex, course, yearLevel, nstpComp, email, contact, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DBConnection.connect();
+        try (Connection conn = DriverManager.getConnection(dbURL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setInt(1, student.getStudentID());
@@ -51,5 +37,17 @@ public class Repository {
             System.err.println("Failed to save student: " + e.getMessage());
         }
     }
+    
+    public static class RepositoryBuilder{
+        private String path;
+        
+        public RepositoryBuilder setDatabasePath(String path){
+            this.path = "jdbc:sqlite:" + path;
+            return this;
+        }
+        public Repository build() {
+            if (path == null) throw new IllegalStateException("Database path not set!");
+            return new Repository(path);
+        }
+    }
 }
-
