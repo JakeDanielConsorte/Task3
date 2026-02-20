@@ -4,11 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 
 
 public class Repository {
     private final String dbURL;
-    
+  
     private Repository(String dbURL){
         this.dbURL = dbURL;
     }
@@ -37,7 +38,40 @@ public class Repository {
             System.err.println("Failed to save student: " + e.getMessage());
         }
     }
+    public Student retrieve(int id) {
+    // 1. Explicitly list all 10 columns in the SQL string
+    String sql = "SELECT studentID, studentName, age, sex, course, yearLevel, nstpComp, email, contact, address " +
+                 "FROM tbl_student WHERE studentID = ?";
     
+    try (Connection conn = DriverManager.getConnection(dbURL);
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        
+        pstmt.setInt(1, id);
+        
+        try (ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                // 2. Create the empty Student Object
+               Student student = new Student.StudentBuilder()
+                .setStudentID(rs.getInt("studentID"))
+                .setStudentName(rs.getString("studentName"))
+                .setAge(rs.getInt("age"))
+                .setSex(rs.getString("sex"))
+                .setCourse(rs.getString("course"))
+                .setYearLevel(rs.getInt("yearLevel"))
+                .setNstpComp(rs.getString("nstpComp"))
+                .setEmail(rs.getString("email"))
+                .setContact(rs.getString("contact"))
+                .setAddress(rs.getString("address"))
+                .build();
+                // 4. Return the complete object
+                return student; 
+            }
+        }
+    } catch (SQLException e) {
+        System.err.println("Database error: " + e.getMessage());
+    }
+    return null; 
+} 
     public static class RepositoryBuilder{
         private String path;
         
