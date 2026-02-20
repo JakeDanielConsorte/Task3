@@ -1,66 +1,98 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
 package student.cc3_task3;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-        
         Scanner sc = new Scanner(System.in);
-        
         Repository repo = new Repository.RepositoryBuilder().setDatabasePath("D:\\NitbensProject\\Test1.db").build();
         
-        System.out.print("Enter Student ID: ");
-        int id = sc.nextInt();
-        sc.nextLine();
+        System.out.println("[1] STORE\n[2] RETRIEVE");
+        System.out.print("Enter action: ");
+        int choice = sc.nextInt();
         
-        System.out.print("Enter Name: ");
-        String name = sc.nextLine();
-        
-        System.out.print("Enter Age: ");
-        int age = sc.nextInt();
-        sc.nextLine();
-        
-        System.out.print("Enter Sex: ");
-        String sex = sc.next();
-        sc.nextLine();
-        
-        System.out.print("Enter Course: ");
-        String course = sc.nextLine();
-        
-        System.out.print("Enter Year Level: ");
-        int year = sc.nextInt();
-        sc.nextLine();
+        switch(choice){
+            case 1: 
+                System.out.print("Enter Student ID: ");
+                    int id = sc.nextInt();
+                    sc.nextLine();
 
-        System.out.print("Enter NSTP Comp: ");
-        String nstp = sc.nextLine();
-        
-        System.out.print("Enter Address: ");
-        String address = sc.nextLine();
-        
-        System.out.print("Enter Email: ");
-        String email = sc.nextLine();
+                    System.out.print("Enter Name: ");
+                    String name = sc.nextLine();
 
-        System.out.print("Enter Contact: ");
-        String contact = sc.next();
-        sc.nextLine();
-        
-        Student student = Student.builder()
-                .setStudentID(id)//1
-                .setStudentName(name)//2
-                .setAge(age)//3
-                .setSex(sex)//4
-                .setCourse(course)//5
-                .setYearLevel(year)//6
-                .setNstpComp(nstp)//7
-                .setEmail(email)//8
-                .setContact(contact)//9
-                .setAddress(address).build();//10
-        
-        System.out.println("------ STUDENT INFORMATION -------");
-        System.out.println(student);
-        
-        repo.save(student);
-        
+                    System.out.print("Enter Age: ");
+                    int age = sc.nextInt();
+                    sc.nextLine();
+
+                    System.out.print("Enter Sex: ");
+                    String sex = sc.next();
+                    sc.nextLine();
+
+                    System.out.print("Enter Course: ");
+                    String course = sc.nextLine();
+
+                    System.out.print("Enter Year Level: ");
+                    int year = sc.nextInt();
+                    sc.nextLine();
+
+                    System.out.print("Enter NSTP Comp: ");
+                    String nstp = sc.nextLine();
+
+                    System.out.print("Enter Address: ");
+                    String address = sc.nextLine();
+
+                    System.out.print("Enter Email: ");
+                    String email = sc.nextLine();
+
+                    System.out.print("Enter Contact: ");
+                    String contact = sc.next();
+                    sc.nextLine();
+
+                    Student student = Student.builder()
+                            .setStudentID(id)//1
+                            .setStudentName(name)//2
+                            .setAge(age)//3
+                            .setSex(sex)//4
+                            .setCourse(course)//5
+                            .setYearLevel(year)//6
+                            .setNstpComp(nstp)//7
+                            .setEmail(email)//8
+                            .setContact(contact)//9
+                            .setAddress(address).build();//10
+
+                    System.out.println("------ STUDENT INFORMATION -------");
+                    System.out.println(student);
+
+                    repo.save(student);
+                break;
+                
+            case 2: 
+                System.out.print("Student ID: ");
+                int studentId = sc.nextInt();
+                
+                Student retrievedStudent = repo.retrieve(studentId);
+                    if (retrievedStudent != null) {
+                        System.out.println("Success! Retrieved: " + "\nID:" + retrievedStudent.getStudentID()
+                                +"\n" + "Name: " + retrievedStudent.getStudentName()
+                                +"\n" + "Age: " + retrievedStudent.getAge()
+                                +"\n" + "Sex: " + retrievedStudent.getSex()
+                                +"\n" + "Course: " + retrievedStudent.getCourse()
+                                +"\n" + "YearLevel: " + retrievedStudent.getYearLevel()
+                                +"\n" + "NSTP Comp: " + retrievedStudent.getNstpComp()
+                                +"\n" + "Email: " + retrievedStudent.getEmail()
+                                +"\n" + "Contact: " + retrievedStudent.getContact()
+                                +"\n" + "Address: " + retrievedStudent.getAddress());
+                    } else {
+                        System.out.println("Student not found.");
+                    }
+                break;
+                
+            default: System.out.println("Invalid Action!");
+        }
         sc.close();
     } 
 }
