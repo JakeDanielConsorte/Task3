@@ -28,7 +28,7 @@ public class Repository {
             pstmt.setInt(6, student.getYearLevel());
             pstmt.setString(7, student.getNstpComp());
             pstmt.setString(8, student.getEmail());
-            pstmt.setString(9, student.getContact());
+            pstmt.setInt(9, student.getContact());
             pstmt.setString(10, student.getAddress());
 
             pstmt.executeUpdate();
@@ -60,7 +60,7 @@ public class Repository {
                 .setYearLevel(rs.getInt("yearLevel"))
                 .setNstpComp(rs.getString("nstpComp"))
                 .setEmail(rs.getString("email"))
-                .setContact(rs.getString("contact"))
+                .setContact(rs.getInt("contact"))
                 .setAddress(rs.getString("address"))
                 .build();
                 // 4. Return the complete object
