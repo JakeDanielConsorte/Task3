@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Repository {
@@ -28,7 +30,7 @@ public class Repository {
             pstmt.setInt(6, student.getYearLevel());
             pstmt.setString(7, student.getNstpComp());
             pstmt.setString(8, student.getEmail());
-            pstmt.setInt(9, student.getContact());
+            pstmt.setString(9, student.getContact());
             pstmt.setString(10, student.getAddress());
 
             pstmt.executeUpdate();
@@ -38,20 +40,16 @@ public class Repository {
             System.err.println("Failed to save student: " + e.getMessage());
         }
     }
-    public Student retrieve(int id) {
-    // 1. Explicitly list all 10 columns in the SQL string
-    String sql = "SELECT studentID, studentName, age, sex, course, yearLevel, nstpComp, email, contact, address " +
-                 "FROM tbl_student WHERE studentID = ?";
-    
+    public List<Student> retrieveAll() { // Now it returns a LIST of students
+    List<Student> students = new ArrayList<>(); // Create the container
+    String sql = "SELECT * FROM tbl_student";
+
     try (Connection conn = DriverManager.getConnection(dbURL);
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
-        
-        pstmt.setInt(1, id);
-        
-        try (ResultSet rs = pstmt.executeQuery()) {
-            if (rs.next()) {
-                // 2. Create the empty Student Object
-               Student student = new Student.StudentBuilder()
+         PreparedStatement pstmt = conn.prepareStatement(sql);
+         ResultSet rs = pstmt.executeQuery()) {
+
+        while (rs.next()) {
+            Student s = new Student.StudentBuilder()
                 .setStudentID(rs.getInt("studentID"))
                 .setStudentName(rs.getString("studentName"))
                 .setAge(rs.getInt("age"))
@@ -60,23 +58,22 @@ public class Repository {
                 .setYearLevel(rs.getInt("yearLevel"))
                 .setNstpComp(rs.getString("nstpComp"))
                 .setEmail(rs.getString("email"))
-                .setContact(rs.getInt("contact"))
+                .setContact(rs.getString("contact"))
                 .setAddress(rs.getString("address"))
                 .build();
-                // 4. Return the complete object
-                return student; 
+            
+                students.add(s); // Put the student into the box
             }
+        } catch (SQLException e) {
+            System.err.println("Error: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        System.err.println("Database error: " + e.getMessage());
+        return students; // Return the whole box
     }
-    return null; 
-} 
     public static class RepositoryBuilder{
         private String path;
         
-        public RepositoryBuilder setDatabasePath(String path){
-            this.path = "jdbc:sqlite:" + path;
+        public RepositoryBuilder setDatabasePath(){
+            this.path = "jdbc:sqlite:D:\\NitbensProject\\Test1.db";
             return this;
         }
         public Repository build() {
@@ -84,4 +81,5 @@ public class Repository {
             return new Repository(path);
         }
     }
+   
 }
