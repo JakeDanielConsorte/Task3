@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
 package student.cc3_task3;
 import java.util.Scanner;
 
@@ -44,8 +48,8 @@ public class Main {
                     System.out.print("Enter Email: ");
                     String email = sc.nextLine();
 
-                    System.out.print("Enter Contact: ");
-                    String contact = sc.next();
+                    System.out.print("Enter Contact (+63): ");
+                    int contact = sc.nextInt();
                     sc.nextLine();
 
                     Student student = Student.builder()
