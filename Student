@@ -1,9 +1,10 @@
+
 package student.cc3_task3;
 
 public class Student {
     private final int studentID;
     private final int age, yearLevel;
-    private final int contact ;
+    private final String contact ;
     private final String studentName, address,sex,email;
     private final String course, nstpComp;
     
@@ -68,7 +69,7 @@ public class Student {
                return email;
            }
 
-           public int getContact() {
+           public String getContact() {
                return contact;
            }
 
@@ -79,7 +80,7 @@ public class Student {
     public static class StudentBuilder{
         private  int studentID;
         private  int age, yearLevel;
-        private  int contact;
+        private  String contact;
         private  String studentName, address,sex, email;
         private  String course, nstpComp;
        
@@ -115,7 +116,7 @@ public class Student {
            this.email = email;
            return this;
        }
-       public StudentBuilder setContact(int contact){//9
+       public StudentBuilder setContact(String contact){//9
            this.contact = contact;
            return this;
        }
